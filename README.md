@@ -3,13 +3,13 @@
   
 # Integrantes
 
-  Carla Simões Gama
-  Gustavo Barbato Floras
-  Jéssica Felix
-  Luan Rodrigues
-  Silene Velasco
+  Carla Simões Gama <br>
+  Gustavo Barbato Floras <br>
+  Jéssica Felix <br>
+  Luan Rodrigues <br>
+  Silene Velasco <br>
 
-# **** Plataforma Troca-í ****
+# <div style="text-align:center"> Plataforma Troca-í </div>
 
 # Métodos realizados:
   Identidade visual: https://bit.ly/2Pazgej
