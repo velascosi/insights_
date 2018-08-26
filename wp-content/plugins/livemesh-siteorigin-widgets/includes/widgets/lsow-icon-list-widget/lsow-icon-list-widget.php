@@ -186,14 +186,11 @@ class LSOW_Icon_List_Widget extends SiteOrigin_Widget {
     }
 
     function get_template_variables($instance, $args) {
-        $settings = $instance['settings'];
-
-        $settings = array_merge($settings, array(
+        return array(
             'icon_type' => $instance['icon_type'],
-            'icon_list' => !empty($instance['icon_list']) ? $instance['icon_list'] : array()
-        ));
-
-        return array('settings' => $settings);
+            'icon_list' => !empty($instance['icon_list']) ? $instance['icon_list'] : array(),
+            'settings' => $instance['settings']
+        );
     }
 
 }

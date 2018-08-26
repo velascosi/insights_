@@ -63,16 +63,7 @@ class LSOW_Testimonials_Slider_Widget extends SiteOrigin_Widget {
                     'type' => 'section',
                     'label' => __('Settings', 'livemesh-so-widgets'),
                     'fields' => array(
-                        "slide_animation" => array(
-                            "type" => "select",
-                            "description" => __("Select your animation type.", "livemesh-so-widgets"),
-                            "label" => __("Animation", "livemesh-so-widgets"),
-                            "options" => array(
-                                "slide" => __("Slide", "livemesh-so-widgets"),
-                                "fade" => __("Fade", "livemesh-so-widgets"),
-                            ),
-                            "default" => "slide",
-                        ),
+
                         'slideshow_speed' => array(
                             'type' => 'number',
                             'label' => __('Slideshow speed', 'livemesh-so-widgets'),
@@ -159,13 +150,10 @@ class LSOW_Testimonials_Slider_Widget extends SiteOrigin_Widget {
     }
 
     function get_template_variables($instance, $args) {
-
-        $settings = $instance['settings'];
-
-        $settings = array_merge($settings,array(
+        return array(
             'testimonials' => !empty($instance['testimonials']) ? $instance['testimonials'] : array(),
-        ));
-        return array('settings' => $settings);
+            'settings' => $instance['settings']
+        );
     }
 
 }

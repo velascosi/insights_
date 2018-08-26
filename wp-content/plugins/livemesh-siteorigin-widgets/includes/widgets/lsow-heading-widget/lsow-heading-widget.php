@@ -113,32 +113,24 @@ class LSOW_Heading_Widget extends SiteOrigin_Widget {
     }
 
     function get_template_variables($instance, $args) {
-
-        $settings = $instance['settings'];
-
-        $settings = array_merge($settings, array(
+        return array(
             'style' => $instance['style'],
             'align' => $instance['align'],
             'heading' => $instance['heading'],
             'short_text' => !empty($instance['short_text']) ? $instance['short_text'] : '',
             'subtitle' => !empty($instance['subtitle']) ? $instance['subtitle'] : '',
 
-            'heading' => $instance['heading']
-        ));
-
-        return array('settings' => $settings);
+            'heading' => $instance['heading'],
+            'settings' => $instance['settings']
+        );
     }
 
     function get_less_variables($instance) {
-
-        if (empty($instance) || !isset($instance['heading_font']))
-            return;
-
         $less = array();
 
-        $font = siteorigin_widget_get_font($instance['heading_font']);
+        $font = siteorigin_widget_get_font( $instance['heading_font'] );
         $less['heading_font'] = $font['family'];
-        if (!empty($font['weight'])) {
+        if ( ! empty( $font['weight'] ) ) {
             $less['heading_font_weight'] = $font['weight'];
         }
 
@@ -149,12 +141,11 @@ class LSOW_Heading_Widget extends SiteOrigin_Widget {
      * Less function for importing Google web fonts.
      */
     function less_import_google_font($instance, $args) {
-        if (empty($instance) || !isset($instance['heading_font']))
-            return;
+        if( empty( $instance ) ) return;
 
-        $font_import = siteorigin_widget_get_font($instance['heading_font']);
-        if (!empty($font_import['css_import'])) {
-            return $font_import['css_import'];
+        $font_import = siteorigin_widget_get_font( $instance['heading_font'] );
+        if( !empty( $font_import['css_import'] ) ) {
+            return  $font_import['css_import'];
         }
     }
 

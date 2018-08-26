@@ -67,6 +67,7 @@ class LSOW_Accordion_Widget extends SiteOrigin_Widget
             'type'        => 'text',
             'label'       => __( 'Panel ID', 'livemesh-so-widgets' ),
             'description' => __( 'The Panel ID is required to link to a panel. It must be unique across the page, must begin with a letter and may be followed by any number of letters, digits, hyphens or underscores.', 'livemesh-so-widgets' ),
+            'connections' => array( 'string', 'html' ),
         ),
             'panel_content' => array(
             'type'        => 'tinymce',
@@ -87,14 +88,11 @@ class LSOW_Accordion_Widget extends SiteOrigin_Widget
     
     function get_template_variables( $instance, $args )
     {
-        $settings = array(
+        return array(
             'style'     => $instance['style'],
             'toggle'    => $instance['toggle'],
             'expanded'  => $instance['expanded'],
             'accordion' => ( !empty($instance['accordion']) ? $instance['accordion'] : array() ),
-        );
-        return array(
-            'settings' => $settings,
         );
     }
 

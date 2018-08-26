@@ -1,28 +1,31 @@
 <?php
 /**
+ * @var $style
+ * @var $align
+ * @var $heading
+ * @var $subtitle
+ * @var $short_text
  * @var $settings
  */
 
-$settings = apply_filters('lsow_heading_' . $this->id . '_settings', $settings);
+?>
 
-list($animate_class, $animation_attr) = lsow_get_animation_atts($settings['animation']);
+<?php list($animate_class, $animation_attr) = lsow_get_animation_atts($settings['animation']); ?>
 
-$output = '<div class="lsow-heading lsow-' . $settings['style'] . ' lsow-align' . $settings['align'] . ' ' . $animate_class . '" ' . $animation_attr . '>';
+<div class="lsow-heading lsow-<?php echo $style; ?> lsow-align<?php echo $align; ?><?php echo $animate_class; ?>" <?php echo $animation_attr; ?>>
 
-if ($settings['style'] == 'style2' && !empty($settings['subtitle'])):
+    <?php if ($style == 'style2' && !empty($subtitle)): ?>
 
-    $output .= '<div class="lsow-subtitle">' . esc_html($settings['subtitle']) . '</div>';
+        <div class="lsow-subtitle"><?php echo esc_html($subtitle); ?></div>
 
-endif;
+    <?php endif; ?>
 
-$output .= '<h3 class="lsow-title">' . wp_kses_post($settings['heading']) . '</h3>';
+    <h3 class="lsow-title"><?php echo wp_kses_post($heading); ?></h3>
 
-if ($settings['style'] != 'style3' && !empty($settings['short_text'])):
+    <?php if ($style != 'style3' && !empty($short_text)): ?>
 
-    $output .= '<p class="lsow-text">' . wp_kses_post($settings['short_text']) . '</p>';
+        <p class="lsow-text"><?php echo wp_kses_post($short_text); ?></p>
 
-endif;
+    <?php endif; ?>
 
-$output .= '</div><!-- .lsow-heading -->';
-
-echo apply_filters('lsow_heading_output', $output, $settings);
+</div>

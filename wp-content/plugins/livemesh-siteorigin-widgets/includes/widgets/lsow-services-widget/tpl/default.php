@@ -1,112 +1,105 @@
 <?php
 /**
  * @var $settings
+ * @var $style
+ * @var $icon_type
+ * @var $services
  */
-
-if (!empty($instance['title']))
-    echo $args['before_title'] . esc_html($instance['title']) . $args['after_title'];
-
-$settings = apply_filters('lsow_services_' . $this->id . '_settings', $settings);
 
 if (!empty($settings['target']))
     $target = 'target="_blank"';
 else
     $target = '';
 
-$id = 'id="' . $this->id . '"';
+?>
 
-$output = '<div ' . $id . ' class="lsow-services lsow-' . $settings['style'] . ' lsow-grid-container ' . lsow_get_grid_classes($settings) . '">';
+<?php if (!empty($instance['title']))
+    echo $args['before_title'] . esc_html($instance['title']) . $args['after_title'] ?>
 
-foreach ($settings['services'] as $service):
+<?php $id = 'id="' . $this->id . '"'; ?>
 
-    list($animate_class, $animation_attr) = lsow_get_animation_atts($service['animation']);
+<div <?php echo $id; ?> class="lsow-services lsow-<?php echo $style; ?> lsow-grid-container <?php echo lsow_get_grid_classes($settings); ?>">
 
-    $service_url = sow_esc_url($service['href']);
+    <?php foreach ($services as $service): ?>
 
-    $child_output = '<div class="lsow-grid-item lsow-service-wrapper">';
+        <?php list($animate_class, $animation_attr) = lsow_get_animation_atts($service['animation']); ?>
 
-    $child_output .= '<div class="lsow-service ' . $animate_class . '" ' . $animation_attr . '>';
+        <?php $service_url = sow_esc_url($service['href']); ?>
 
-    if ($settings['icon_type'] == 'icon_image') :
+        <div class="lsow-grid-item lsow-service-wrapper">
 
-        if (!empty($service['icon_image'])):
+            <div class="lsow-service <?php echo $animate_class; ?>" <?php echo $animation_attr; ?>>
 
-            if (empty($service_url)) :
+                <?php if ($icon_type == 'icon_image') : ?>
 
-                $child_output .= '<div class="lsow-image-wrapper">';
+                    <?php if (empty($service_url)) : ?>
 
-                $image_html = wp_get_attachment_image($service['icon_image'], 'full', false, array('class' => 'lsow-image full'));
+                        <div class="lsow-image-wrapper">
 
-                $child_output .= $image_html;
+                            <?php echo wp_get_attachment_image($service['icon_image'], 'full', false, array('class' => 'lsow-image full')); ?>
 
-                $child_output .= '</div>';
+                        </div>
 
-            else :
+                    <?php else : ?>
 
-                $child_output .= '<a class="lsow-image-wrapper" href="' . $service_url . '" ' . $target . '>';
+                        <a class="lsow-image-wrapper" href="<?php echo $service_url; ?>" <?php echo $target; ?>>
 
-                $image_html = wp_get_attachment_image($service['icon_image'], 'full', false, array('class' => 'lsow-image full'));
+                            <?php echo wp_get_attachment_image($service['icon_image'], 'full', false, array('class' => 'lsow-image full')); ?>
 
-                $child_output .= $image_html;
+                        </a>
 
-                $child_output .= '</a>';
+                    <?php endif; ?>
 
-            endif;
+                <?php else : ?>
 
-        endif;
+                    <?php if (empty($service_url)) : ?>
 
-    elseif ($settings['icon_type'] == 'icon') :
+                        <div class="lsow-icon-wrapper">
 
-        if (empty($service_url)) :
+                            <?php echo siteorigin_widget_get_icon($service['icon']); ?>
 
-            $child_output .= '<div class="lsow-icon-wrapper">';
+                        </div>
 
-            $child_output .= siteorigin_widget_get_icon($service['icon']);;
+                    <?php else : ?>
 
-            $child_output .= '</div>';
+                        <a class="lsow-icon-wrapper" href="<?php echo $service_url; ?>" <?php echo $target; ?>>
 
-        else :
+                            <?php echo siteorigin_widget_get_icon($service['icon']); ?>
 
-            $child_output .= '<a class="lsow-icon-wrapper" href="' . $service_url . '" ' . $target . '>';
+                        </a>
 
-            $child_output .= siteorigin_widget_get_icon($service['icon']);;
+                    <?php endif; ?>
 
-            $child_output .= '</a>';
+                <?php endif; ?>
 
-        endif;
+                <div class="lsow-service-text">
 
-    endif;
+                    <?php if (empty($service_url)) : ?>
 
-    $child_output .= '<div class="lsow-service-text">';
+                        <h3 class="lsow-title"><?php echo esc_html($service['title']) ?></h3>
 
-    if (empty($service_url)) :
+                    <?php else : ?>
 
-        $child_output .= '<h3 class="lsow-title">' . esc_html($service['title']) . '</h3>';
+                        <a class="lsow-title-link" href="<?php echo $service_url; ?>" <?php echo $target; ?>>
 
-    else:
+                            <h3 class="lsow-title"><?php echo esc_html($service['title']) ?></h3>
 
-        $child_output .= '<a class="lsow-title-link" href="' . $service_url . '" ' . $target . '>';
+                        </a>
 
-        $child_output .= '<h3 class="lsow-title">' . esc_html($service['title']) . '</h3>';
+                    <?php endif; ?>
 
-        $child_output .= '</a>';
+                    <div class="lsow-service-details"><?php echo wp_kses_post($service['excerpt']) ?></div>
 
-    endif;
+                </div>
 
-    $child_output .= '<div class="lsow-service-details">' . do_shortcode(wp_kses_post($service['excerpt'])) . '</div>';
+            </div>
 
-    $child_output .= '</div><!-- .lsow-service-text -->';
+        </div>
 
-    $child_output .= '</div><!-- .lsow-service -->';
+        <?php
 
-    $child_output .= '</div><!-- .lsow-service-wrapper -->';
+    endforeach;
 
-    $output .= apply_filters('lsow_service_item_output', $child_output, $service, $settings);
+    ?>
 
-endforeach;
-
-$output .= '</div><!-- .lsow-services -->';
-
-$output .= '<div class="lsow-clear"></div>';
-
-echo apply_filters('lsow_services_output', $output, $settings);
+</div>

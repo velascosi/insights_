@@ -293,23 +293,24 @@ class LSOW_Carousel_Widget extends SiteOrigin_Widget {
     }
 
     function get_template_variables($instance, $args) {
-        $settings = $instance['settings'];
 
-        $settings = array_merge($settings, array(
+
+        $return = array(
             'elements' => !empty($instance['elements']) ? $instance['elements'] : array(),
+            'settings' => $instance['settings'],
             'carousel_settings' => $instance['carousel_settings']
-        ));
+        );
 
-        unset($settings['carousel_settings']['responsive']);
+        unset($return['carousel_settings']['responsive']);
 
-        $settings['carousel_settings']['tablet_width'] = $instance['carousel_settings']['responsive']['tablet']['width'];
-        $settings['carousel_settings']['tablet_display_columns'] = $instance['carousel_settings']['responsive']['tablet']['display_columns'];
-        $settings['carousel_settings']['tablet_scroll_columns'] = $instance['carousel_settings']['responsive']['tablet']['scroll_columns'];
-        $settings['carousel_settings']['mobile_width'] = $instance['carousel_settings']['responsive']['mobile']['width'];
-        $settings['carousel_settings']['mobile_display_columns'] = intval($instance['carousel_settings']['responsive']['mobile']['display_columns']);
-        $settings['carousel_settings']['mobile_scroll_columns'] = $instance['carousel_settings']['responsive']['mobile']['scroll_columns'];
+        $return['carousel_settings']['tablet_width'] = $instance['carousel_settings']['responsive']['tablet']['width'];
+        $return['carousel_settings']['tablet_display_columns'] = $instance['carousel_settings']['responsive']['tablet']['display_columns'];
+        $return['carousel_settings']['tablet_scroll_columns'] = $instance['carousel_settings']['responsive']['tablet']['scroll_columns'];
+        $return['carousel_settings']['mobile_width'] = $instance['carousel_settings']['responsive']['mobile']['width'];
+        $return['carousel_settings']['mobile_display_columns'] = intval($instance['carousel_settings']['responsive']['mobile']['display_columns']);
+        $return['carousel_settings']['mobile_scroll_columns'] = $instance['carousel_settings']['responsive']['mobile']['scroll_columns'];
 
-        return array('settings' => $settings);
+        return $return;
     }
 
 }

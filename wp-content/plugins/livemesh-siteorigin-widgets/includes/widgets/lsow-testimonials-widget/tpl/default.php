@@ -1,59 +1,43 @@
 <?php
 /**
  * @var $settings
+ * @var $testimonials
  */
 ?>
 
-<?php if( !empty( $instance['title'] ) ) echo $args['before_title'] . esc_html($instance['title']) . $args['after_title'];
+<?php if( !empty( $instance['title'] ) ) echo $args['before_title'] . esc_html($instance['title']) . $args['after_title'] ?>
 
-$settings = apply_filters('lsow_testimonials_' . $this->id . '_settings', $settings);
+<div class="lsow-testimonials lsow-grid-container <?php echo lsow_get_grid_classes($settings); ?>">
 
-$output = '<div class="lsow-testimonials lsow-grid-container ' . lsow_get_grid_classes($settings) . '">';
+    <?php foreach ($testimonials as $testimonial) : ?>
 
-foreach ($settings['testimonials'] as $testimonial) :
+        <?php list($animate_class, $animation_attr) = lsow_get_animation_atts($testimonial['animation']); ?>
 
-    list($animate_class, $animation_attr) = lsow_get_animation_atts($testimonial['animation']);
+        <div class="lsow-grid-item lsow-testimonial <?php echo $animate_class; ?>" <?php echo $animation_attr; ?>>
 
-    $child_output = '<div class="lsow-grid-item lsow-testimonial ' . $animate_class . '" ' . $animation_attr . '>';
+            <div class="lsow-testimonial-text">
+                <?php echo wp_kses_post($testimonial['text']) ?>
+            </div>
 
-    $child_output .= '<div class="lsow-testimonial-text">';
+            <div class="lsow-testimonial-user">
 
-    $child_output .= do_shortcode($testimonial['text']);
+                <div class="lsow-image-wrapper">
+                    <?php echo wp_get_attachment_image($testimonial['image'], 'thumbnail', false, array('class' => 'lsow-image full')); ?>
+                </div>
 
-    $child_output .= '</div>';
+                <div class="lsow-text">
+                    <h4 class="lsow-author-name"><?php echo esc_html($testimonial['name']) ?></h4>
+                    <div class="lsow-author-credentials"><?php echo wp_kses_post($testimonial['credentials']); ?></div>
+                </div>
 
-    $child_output .= '<div class="lsow-testimonial-user">';
+            </div>
 
-    $child_output .= '<div class="lsow-image-wrapper">';
+        </div>
 
-    $client_image = $testimonial['image'];
+    <?php
 
-    if (!empty($client_image)):
+    endforeach;
 
-        $child_output .= wp_get_attachment_image($client_image, 'thumbnail', false, array('class' => 'lsow-image full'));
+    ?>
 
-    endif;
-
-    $child_output .= '</div>';
-
-    $child_output .= '<div class="lsow-text">';
-
-    $child_output .= '<h3 class="lsow-author-name">' . esc_html($testimonial['name']) . '</h3>';
-
-    $child_output .= '<div class="lsow-author-credentials">' . wp_kses_post($testimonial['credentials']) . '</div>';
-
-    $child_output .= '</div><!-- .lsow-text -->';
-
-    $child_output .= '</div><!-- .lsow-testimonial-user -->';
-
-    $child_output .= '</div><!-- .lsow-testimonial -->';
-
-    $output .= apply_filters('lsow_testimonial_output', $child_output, $testimonial, $settings);
-
-endforeach;
-
-$output .= '</div><!-- .lsow-testimonials -->';
-
-$output .= '<div class="lsow-clear"></div>';
-
-echo apply_filters('lsow_testimonials_output', $output, $settings);
+</div>

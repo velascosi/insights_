@@ -89,11 +89,9 @@ class LSOW_Stats_Bars_Widget extends SiteOrigin_Widget {
     }
 
     function get_template_variables($instance, $args) {
-        $settings = array(
+        return array(
             'stats_bars' => !empty($instance['stats-bars']) ? $instance['stats-bars'] : array()
         );
-
-        return array('settings' => $settings);
     }
 
 }

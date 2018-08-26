@@ -143,14 +143,11 @@ class LSOW_Tabs_Widget extends SiteOrigin_Widget
     
     function get_template_variables( $instance, $args )
     {
-        $settings = array(
+        return array(
             'style'        => $instance['style'],
             'icon_type'    => $instance['icon_type'],
             'mobile_width' => intval( $instance['mobile_width'] ),
             'tabs'         => ( !empty($instance['tabs']) ? $instance['tabs'] : array() ),
-        );
-        return array(
-            'settings' => $settings,
         );
     }
 

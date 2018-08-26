@@ -1,46 +1,43 @@
 <?php
 /**
- * @var $settings
+ * @var $stats_bars
  */
+?>
 
-if (!empty($instance['title']))
-    echo $args['before_title'] . esc_html($instance['title']) . $args['after_title'];
+<?php if( !empty( $instance['title'] ) ) echo $args['before_title'] . esc_html($instance['title']) . $args['after_title'] ?>
 
-$settings = apply_filters('lsow_stats_bars_' . $this->id . '_settings', $settings);
+<div class="lsow-stats-bars">
 
-$output = '<div class="lsow-stats-bars">';
+    <?php foreach ($stats_bars as $stats_bar) :
 
-foreach ($settings['stats_bars'] as $stats_bar) :
+        $color_style = '';
+        $color = $stats_bar['color'];
+        if ($color)
+            $color_style = ' style="background:' . esc_attr($color) . ';"';
 
-    $color_style = '';
-    $color = $stats_bar['color'];
-    if ($color)
-        $color_style = ' style="background:' . esc_attr($color) . ';"';
+        ?>
 
-    $child_output = '<div class="lsow-stats-bar">';
+        <div class="lsow-stats-bar">
 
-    $child_output .= '<div class="lsow-stats-title">';
+            <div class="lsow-stats-title">
+                <?php echo esc_html($stats_bar['title']) ?><span><?php echo esc_attr($stats_bar['value']); ?>%</span>
+            </div>
 
-    $child_output .= esc_html($stats_bar['title']);
+            <div class="lsow-stats-bar-wrap">
 
-    $child_output .= '<span>' . esc_attr($stats_bar['value']) . '%</span>';
+                <div <?php echo $color_style; ?> class="lsow-stats-bar-content"
+                                                 data-perc="<?php echo esc_attr($stats_bar['value']); ?>"></div>
 
-    $child_output .= '</div>';
+                <div class="lsow-stats-bar-bg"></div>
 
-    $child_output .= '<div class="lsow-stats-bar-wrap">';
+            </div>
 
-    $child_output .= '<div ' . $color_style . ' class="lsow-stats-bar-content" data-perc="' . esc_attr($stats_bar['value']) . '"></div>';
+        </div>
 
-    $child_output .= '<div class="lsow-stats-bar-bg"></div>';
+    <?php
 
-    $child_output .= '</div>';
+    endforeach;
 
-    $child_output .= '</div><!-- .lsow-stats-bar -->';
+    ?>
 
-    $output .= apply_filters('lsow_stats_bar_output', $child_output, $stats_bar, $settings);
-
-endforeach;
-
-$output .= '</div><!-- .lsow-stats-bars -->';
-
-echo apply_filters('lsow_stats_bars_output', $output, $settings);
+</div>

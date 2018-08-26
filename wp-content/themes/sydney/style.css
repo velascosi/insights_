@@ -3329,13 +3329,6 @@ div[class*="elementor-widget-wp-widget-sydney"] h5 {
     margin: 0 3px;
     text-decoration-color: #bababa;	
 }
-
-/* Alterações */
-
-.page .entry-header {
-    display: none;
-}
-
 /* Media Queries
 -------------------------------------------------------------- */
 	@media only screen and (min-width: 1930px) {

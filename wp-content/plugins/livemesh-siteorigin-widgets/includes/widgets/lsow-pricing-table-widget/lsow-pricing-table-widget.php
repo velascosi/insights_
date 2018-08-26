@@ -166,13 +166,10 @@ class LSOW_Pricing_Table_Widget extends SiteOrigin_Widget {
     }
 
     function get_template_variables($instance, $args) {
-        $settings = $instance['settings'];
-
-        $settings = array_merge($settings, array(
-            'pricing_plans' => !empty($instance['pricing-plans']) ? $instance['pricing-plans'] : array()
-        ));
-
-        return array('settings' => $settings);
+        return array(
+            'pricing_plans' => !empty($instance['pricing-plans']) ? $instance['pricing-plans'] : array(),
+            'settings' => $instance['settings']
+        );
     }
 
 }

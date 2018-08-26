@@ -240,14 +240,11 @@ class LSOW_Portfolio_Widget extends SiteOrigin_Widget
     
     function get_template_variables( $instance, $args )
     {
-        $settings = $instance['settings'];
-        $settings = array_merge( $settings, array(
+        return array(
             'posts'           => $instance['posts'],
             'taxonomy_filter' => $instance['taxonomy_filter'],
             'heading'         => $instance['heading'],
-        ) );
-        return array(
-            'settings' => $settings,
+            'settings'        => $instance['settings'],
         );
     }
 

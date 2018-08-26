@@ -28,7 +28,6 @@ if ( !class_exists( 'Livemesh_SiteOrigin_Widgets' ) ) {
                 add_action( 'plugins_loaded', array( self::$instance, 'load_plugin_textdomain' ) );
                 self::$instance->includes();
                 self::$instance->hooks();
-                self::$instance->template_hooks();
             }
             
             return self::$instance;
@@ -43,7 +42,7 @@ if ( !class_exists( 'Livemesh_SiteOrigin_Widgets' ) ) {
         public function __clone()
         {
             // Cloning instances of the class is forbidden
-            _doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'livemesh-so-widgets' ), '2.5' );
+            _doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'livemesh-so-widgets' ), '2.3' );
         }
         
         /**
@@ -53,7 +52,7 @@ if ( !class_exists( 'Livemesh_SiteOrigin_Widgets' ) ) {
         public function __wakeup()
         {
             // Unserializing instances of the class is forbidden
-            _doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'livemesh-so-widgets' ), '2.5' );
+            _doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'livemesh-so-widgets' ), '2.3' );
         }
         
         private function setup_debug_constants()
@@ -125,45 +124,6 @@ if ( !class_exists( 'Livemesh_SiteOrigin_Widgets' ) ) {
         {
             add_action( 'wp_enqueue_scripts', array( $this, 'load_frontend_scripts' ), 10 );
             add_action( 'wp_enqueue_scripts', array( $this, 'localize_scripts' ), 999999 );
-        }
-        
-        private function template_hooks()
-        {
-            $addons = array(
-                'clients',
-                'carousel',
-                'heading',
-                'odometers',
-                'piecharts',
-                'posts_grid',
-                'posts_carousel',
-                'pricing_table',
-                'services',
-                'stats_bars',
-                'team_members',
-                'testimonials',
-                'testimonials_slider',
-                'tabs',
-                'accordion',
-                'button',
-                'icon_list'
-            );
-            foreach ( $addons as $addon ) {
-                add_filter(
-                    'lsow_' . $addon . '_output',
-                    function ( $default_output, $settings ) use( $addon ) {
-                    // Replace underscores with dashes for template file names
-                    $template_name = str_replace( '_', '-', $addon );
-                    $output = lsow_get_template_part( $template_name, $settings );
-                    if ( $output !== null ) {
-                        return $output;
-                    }
-                    return $default_output;
-                },
-                    10,
-                    2
-                );
-            }
         }
         
         /**

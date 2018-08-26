@@ -64,10 +64,13 @@ $theme_color: #f94213;
     position: relative;
     .lsow-tab-pane {
       padding: 40px;
-      display: none;
+      display: block;
       overflow: hidden;
+      position: absolute;
+      left: -9999px;
       &.lsow-active {
-        display: block;
+        position: static;
+        left: 0;
         animation: lsow-fade 0.3s ease-in-out;
         }
       }

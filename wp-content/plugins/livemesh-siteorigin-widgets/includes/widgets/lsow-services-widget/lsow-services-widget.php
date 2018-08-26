@@ -211,15 +211,12 @@ class LSOW_Services_Widget extends SiteOrigin_Widget {
     }
 
     function get_template_variables($instance, $args) {
-        $settings = $instance['settings'];
-
-        $settings = array_merge($settings, array(
+        return array(
             'style' => $instance['style'],
             'icon_type' => $instance['icon_type'],
-            'services' => !empty($instance['services']) ? $instance['services'] : array()
-        ));
-
-        return array('settings' => $settings);
+            'services' => !empty($instance['services']) ? $instance['services'] : array(),
+            'settings' => $instance['settings']
+        );
     }
 
 }

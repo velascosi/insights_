@@ -1,212 +1,186 @@
 <?php
 /**
  * @var $settings
+ * @var $heading
+ * @var $taxonomy_filter
+ * @var $posts
  */
 
 if (!empty($instance['title']))
     echo $args['before_title'] . esc_html($instance['title']) . $args['after_title'];
 
-$settings = apply_filters('lsow_posts_grid_' . $this->id . '_settings', $settings);
-
 $taxonomies = array();
 
-$query_args = siteorigin_widget_post_selector_process_query($settings['posts']);
+$current_page = get_queried_object_id();
 
-$query_args = apply_filters('lsow_posts_grid_' . $this->id . '_query_args', $query_args, $settings);
+$query_args = siteorigin_widget_post_selector_process_query($posts);
 
 // Use the processed post selector query to find posts.
 $loop = new WP_Query($query_args);
 
 // Loop through the posts and do something with them.
-if ($loop->have_posts()) :
+if ($loop->have_posts()) : ?>
 
-    // Check if any taxonomy filter has been applied
-    list($chosen_terms, $taxonomies) = lsow_get_chosen_terms($query_args);
+    <div class="lsow-portfolio-wrap lsow-gapless-grid">
 
-    if (empty($chosen_terms))
-        $taxonomies[] = $settings['taxonomy_filter'];
+        <?php
+        // Check if any taxonomy filter has been applied
+        list($chosen_terms, $taxonomies) = lsow_get_chosen_terms($query_args);
+        if (empty($chosen_terms))
+            $taxonomies[] = $taxonomy_filter;
 
-    $output = '<div class="lsow-portfolio-wrap lsow-gapless-grid">';
+        ?>
 
-    if (!empty($settings['heading']) || $settings['filterable']):
+        <?php if (!empty($heading) || $settings['filterable']): ?>
 
-        $header_class = (trim($settings['heading']) === '') ? ' lsow-no-heading' : '';
+            <?php $header_class = (trim($heading) === '') ? ' lsow-no-heading' : ''; ?>
 
-        $grid_header = '<div class="lsow-portfolio-header ' . $header_class . '">';
+            <div class="lsow-portfolio-header <?php echo $header_class; ?>">
 
-        if (!empty($settings['heading'])) :
+                <?php if (!empty($heading)) : ?>
 
-            $grid_header .= '<h3 class="lsow-heading">' . wp_kses_post($settings['heading']) . '</h3>';
+                    <h3 class="lsow-heading"><?php echo wp_kses_post($heading); ?></h3>
 
-        endif;
+                <?php endif; ?>
 
-        if ($settings['filterable'])
-            $grid_header .= lsow_get_taxonomy_terms_filter($taxonomies, $chosen_terms);
+                <?php
 
-        $grid_header .= '</div>';
+                if ($settings['filterable'])
+                    echo lsow_get_taxonomy_terms_filter($taxonomies, $chosen_terms);
 
-        $output .= apply_filters('lsow_posts_grid_header', $grid_header, $settings);
+                ?>
 
-    endif;
+            </div>
 
-    $output .= '<div id="lsow-portfolio-' . uniqid()
-        . '" class="lsow-portfolio js-isotope lsow-' . esc_attr($settings['layout_mode']) . ' lsow-grid-container ' . lsow_get_grid_classes($settings)
-        . '" data-isotope-options=\'{ "itemSelector": ".lsow-portfolio-item", "layoutMode": "' . esc_attr($settings['layout_mode']) . '"}\'>';
+        <?php endif; ?>
 
-    $current_page = get_queried_object_id();
+        <div class="lsow-portfolio js-isotope lsow-<?php echo $settings['layout_mode']; ?> lsow-grid-container <?php echo lsow_get_grid_classes($settings); ?>"
+             data-settings='{ "itemSelector": ".lsow-portfolio-item", "layoutMode": "<?php echo esc_attr($settings['layout_mode']); ?>" }'>
 
-    while ($loop->have_posts()) : $loop->the_post();
+            <?php while ($loop->have_posts()) : $loop->the_post(); ?>
 
-        $post_id = get_the_ID();
+                <?php
+                if (get_the_ID() === $current_page)
+                    continue; // skip the current page since they can run into infinite loop when users choose All option in build query
+                ?>
 
-        if ($post_id === $current_page)
-            continue; // skip current page since we can run into infinite loop when users choose All option in build query
+                <?php
 
-        $style = '';
+                $style = '';
 
-        foreach ($taxonomies as $taxonomy) {
+                foreach ($taxonomies as $taxonomy) {
 
-            $terms = get_the_terms($post_id, $taxonomy);
+                    $terms = get_the_terms(get_the_ID(), $taxonomy);
 
-            if (!empty($terms) && !is_wp_error($terms)) {
+                    if (!empty($terms) && !is_wp_error($terms)) {
 
-                foreach ($terms as $term) {
-                    $style .= ' term-' . $term->term_id;
+                        foreach ($terms as $term) {
+                            $style .= ' term-' . $term->term_id;
+                        }
+                    }
                 }
-            }
-        }
+                ?>
 
-        $entry_output = '<div data-id="id-' . $post_id . '" class="lsow-grid-item lsow-portfolio-item ' . $style . '">';
+                <div data-id="id-<?php the_ID(); ?>"
+                     class="lsow-grid-item lsow-portfolio-item <?php echo $style; ?>">
 
-        $entry_output .= '<article id="post-' . $post_id . '" class="' . join(' ', get_post_class('', $post_id)) . '">';
+                    <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
 
-        if ($thumbnail_exists = has_post_thumbnail()):
+                        <?php if ($thumbnail_exists = has_post_thumbnail()): ?>
 
-            $entry_image = '<div class="lsow-project-image">';
+                            <div class="lsow-project-image">
 
-            if ($settings['image_linkable']):
+                                <?php if ($settings['image_linkable']): ?>
 
-                $thumbnail_html = '<a href="' . get_the_permalink()
-                    . '" target="' . $settings['link_target']
-                    . '">' . get_the_post_thumbnail($post_id, $settings['image_size'])
-                    . '</a>';
+                                <a href="<?php the_permalink(); ?>"
+                                   target="<?php echo $settings['link_target']; ?>"><?php the_post_thumbnail($settings['image_size']); ?></a>
 
-            else:
+                                <?php else: ?>
 
-                $thumbnail_html = get_the_post_thumbnail($post_id, $settings['image_size']);
+                                <?php the_post_thumbnail($settings['image_size']); ?>
 
-            endif;
+                                <?php endif; ?>
 
-            $entry_image .= apply_filters('lsow_posts_grid_thumbnail_html', $thumbnail_html, $post_id, $settings);
+                                <div class="lsow-image-info">
 
-            $image_info = '<div class="lsow-image-info">';
+                                    <div class="lsow-entry-info">
 
-            $image_info .= '<div class="lsow-entry-info">';
+                                    <?php the_title('<h3 class="lsow-post-title"><a target="' . $settings["link_target"] . '" href="' . get_permalink() . '" title="' . get_the_title() . '"
+                                               rel="bookmark">', '</a></h3>'); ?>
 
-            $image_info .= '<h3 class="lsow-post-title">';
+                                        <?php echo lsow_get_info_for_taxonomies($taxonomies); ?>
 
-            $image_info .= '<a href="' . get_permalink()
-                . '" title="' . get_the_title()
-                . '" target="' . $settings["link_target"]
-                . '" rel="bookmark">' . get_the_title()
-                . '</a>';
+                                    </div>
 
-            $image_info .= '</h3>';
+                                </div>
 
-            $image_info .= lsow_get_info_for_taxonomies($taxonomies);
+                            </div>
 
-            $image_info .= '</div>';
+                        <?php endif; ?>
 
-            $image_info .= '</div><!-- .lsow-image-info -->';
+                        <?php if ($settings['display_title'] || $settings['display_summary']) : ?>
 
-            $entry_image .= apply_filters('lsow_posts_grid_image_info', $image_info, $post_id, $settings);
+                            <div class="lsow-entry-text-wrap <?php echo($thumbnail_exists ? '' : ' nothumbnail'); ?>">
 
-            $entry_image .= '</div>';
+                                <?php if ($settings['display_title']) : ?>
 
-            $entry_output .= apply_filters('lsow_posts_grid_entry_image', $entry_image, $post_id, $settings);
+                                <?php the_title('<h3 class="entry-title"><a target="' . $settings["link_target"] . '" href="' . get_permalink() . '" title="' . get_the_title() . '"
+                                               rel="bookmark">', '</a></h3>'); ?>
 
-        endif;
+                                <?php endif; ?>
 
-        if (($settings['display_title']) || ($settings['display_summary'])) :
+                                <?php if ($settings['post_meta']['display_post_date'] || $settings['post_meta']['display_author'] || $settings['post_meta']['display_taxonomy']) : ?>
 
-            $entry_text = '<div class="lsow-entry-text-wrap ' . ($thumbnail_exists ? '' : ' nothumbnail') . '">';
+                                    <div class="lsow-entry-meta">
 
-            if ($settings['display_title']) :
+                                        <?php if ($settings['post_meta']['display_author']): ?>
 
-                $entry_title = '<h3 class="entry-title">';
+                                            <?php echo lsow_entry_author(); ?>
 
-                $entry_title .= '<a href="' . get_permalink()
-                    . '" title="' . get_the_title()
-                    . '" target="' . $settings["link_target"]
-                    . '" rel="bookmark">' . get_the_title()
-                    . '</a>';
+                                        <?php endif; ?>
 
-                $entry_title .= '</h3>';
+                                        <?php if ($settings['post_meta']['display_post_date']): ?>
 
-                $entry_text .= apply_filters('lsow_posts_grid_entry_title', $entry_title, $post_id, $settings);
+                                            <?php echo lsow_entry_published(); ?>
 
-            endif;
+                                        <?php endif; ?>
 
-            if (($settings['post_meta']['display_post_date']) || ($settings['post_meta']['display_author']) || ($settings['post_meta']['display_taxonomy'])) :
+                                        <?php if ($settings['post_meta']['display_taxonomy']): ?>
 
-                $entry_meta = '<div class="lsow-entry-meta">';
+                                            <?php echo lsow_get_info_for_taxonomies($taxonomies); ?>
 
-                if ($settings['post_meta']['display_author']):
+                                        <?php endif; ?>
 
-                    $entry_meta .= lsow_entry_author();
+                                    </div>
 
-                endif;
+                                <?php endif; ?>
 
-                if ($settings['post_meta']['display_post_date']):
+                                <?php if ($settings['display_summary']) : ?>
 
-                    $entry_meta .= lsow_entry_published();
+                                    <div class="entry-summary">
 
-                endif;
+                                        <?php the_excerpt(); ?>
 
-                if ($settings['post_meta']['display_taxonomy']):
+                                    </div>
 
-                    $entry_meta .= lsow_get_info_for_taxonomies($taxonomies);
+                                <?php endif; ?>
 
-                endif;
+                            </div>
 
-                $entry_meta .= '</div>';
+                        <?php endif; ?>
 
-                $entry_text .= apply_filters('lsow_posts_grid_entry_meta', $entry_meta, $post_id, $settings);
+                    </article>
+                    <!-- .hentry -->
 
-            endif;
+                </div><!--Isotope element -->
 
-            if ($settings['display_summary']) :
+            <?php endwhile; ?>
 
-                $excerpt = '<div class="entry-summary">';
+            <?php wp_reset_postdata(); ?>
 
-                $excerpt .= get_the_excerpt();
+        </div>
+        <!-- Isotope items -->
 
-                $excerpt .= '</div>';
+    </div>
 
-                $entry_text .= apply_filters('lsow_posts_grid_entry_excerpt', $excerpt, $post_id, $settings);
-
-            endif;
-
-            $entry_text .= '</div>';
-
-            $entry_output .= apply_filters('lsow_posts_grid_entry_text', $entry_text, $post_id, $settings);
-
-        endif;
-
-        $entry_output .= '</article><!-- .hentry -->';
-
-        $entry_output .= '</div>';
-
-        $output .= apply_filters('lsow_posts_grid_entry_output', $entry_output, $post_id, $settings);
-
-    endwhile;
-
-    wp_reset_postdata();
-
-    $output .= '</div><!-- .lsow-portfolio -->';
-
-    $output .= '</div><!-- .lsow-portfolio-wrap -->';
-
-    echo apply_filters('lsow_posts_grid_output', $output, $settings);
-
-endif;
+<?php endif; ?>

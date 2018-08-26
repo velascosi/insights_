@@ -198,19 +198,24 @@ class LSOW_Button_Widget extends SiteOrigin_Widget {
     }
 
     function get_template_variables($instance, $args) {
-
-        $settings = $instance['settings'];
-
-        $settings = array_merge($settings, array(
+        return array(
             "id" => $this->element_id,
+            "style" => $instance['settings']["style"],
+            "class" => $instance['settings']["class"],
+            "color" => $instance['settings']["color"],
+            "custom_color" => $instance['settings']["custom_color"],
+            "hover_color" => $instance['settings']["hover_color"],
+            "type" => $instance['settings']["type"],
+            "align" => $instance['settings']["align"],
+            "target" => $instance['settings']["target"],
+            "rounded" => $instance['settings']["rounded"],
             "href" => (!empty($instance['href'])) ? sow_esc_url($instance['href']) : '',
             "text" => $instance["text"],
             'icon_type' => $instance['icon_type'],
             'icon_image' => $instance['icon_image'],
-            'icon' => $instance['icon']
-        ));
-
-        return array('settings' => $settings);
+            'icon' => $instance['icon'],
+            'settings' => $instance['settings']
+        );
     }
 
 }

@@ -1,5 +1,7 @@
 <?php
 /**
+ * @var $icon_type
+ * @var $icon_list
  * @var $settings
  */
 
@@ -10,74 +12,70 @@ else
 
 ?>
 
-<?php if( !empty( $instance['title'] ) ) echo $args['before_title'] . esc_html($instance['title']) . $args['after_title'];
+<?php if( !empty( $instance['title'] ) ) echo $args['before_title'] . esc_html($instance['title']) . $args['after_title'] ?>
 
-$settings = apply_filters('lsow_icon_list_' . $this->id . '_settings', $settings);
+<?php list($animate_class, $animation_attr) = lsow_get_animation_atts($settings['animation']); ?>
 
-list($animate_class, $animation_attr) = lsow_get_animation_atts($settings['animation']);
+<div class="lsow-icon-list lsow-align<?php echo $settings['align']; ?>">
 
-$output = '<div class="lsow-icon-list lsow-align' . $settings['align'] . '">';
+    <?php foreach ($icon_list as $icon_item): ?>
 
-foreach ($settings['icon_list'] as $icon_item):
+        <?php $icon_type = esc_html($icon_type); ?>
 
-    $icon_type = esc_html($settings['icon_type']);
+        <?php $icon_title = esc_html($icon_item['title']); ?>
 
-    $icon_title = esc_html($icon_item['title']);
+        <?php $icon_url = sow_esc_url($icon_item['href']); ?>
 
-    $icon_url = !empty($icon_item['href']) ? $icon_item['href'] : null;
+        <div class="lsow-icon-list-item<?php echo $animate_class; ?>" <?php echo $animation_attr; ?> title="<?php echo $icon_title; ?>">
 
-    $target = $icon_item['href']['is_external'] ? 'target="_blank"' : '';
+            <?php if ($icon_type == 'icon_image') : ?>
 
-    $child_output = '<div class="lsow-icon-list-item ' . $animate_class . '" ' . $animation_attr . ' title="' . $icon_title . '">';
+                <?php if (empty($icon_url)) : ?>
 
-    if (($icon_type == 'icon_image') && !empty($icon_item['icon_image'])) :
+                    <div class="lsow-image-wrapper">
 
-        if (empty($icon_url)) :
+                        <?php echo wp_get_attachment_image($icon_item['icon_image'], 'full', false, array('class' => 'lsow-image full', 'alt' => $icon_title)); ?>
 
-            $child_output .= '<div class="lsow-image-wrapper">';
+                    </div>
 
-            $child_output .= wp_get_attachment_image($icon_item['icon_image'], 'full', false, array('class' => 'lsow-image full', 'alt' => $icon_title));
+                <?php else : ?>
 
-            $child_output .= '</div>';
+                    <a class="lsow-image-wrapper" href="<?php echo $icon_url; ?>" <?php echo $target; ?>>
 
-        else :
+                        <?php echo wp_get_attachment_image($icon_item['icon_image'], 'full', false, array('class' => 'lsow-image full', 'alt' => $icon_title)); ?>
 
-            $child_output .= '<a class="lsow-image-wrapper" href="' . $icon_url . '" ' . $target . '>';
+                    </a>
 
-            $child_output .= wp_get_attachment_image($icon_item['icon_image'], 'full', false, array('class' => 'lsow-image full', 'alt' => $icon_title));
+                <?php endif; ?>
 
-            $child_output .= '</a>';
+            <?php else : ?>
 
-        endif;
+                <?php if (empty($icon_url)) : ?>
 
-    else :
+                    <div class="lsow-icon-wrapper">
 
-        if (empty($icon_url)) :
+                        <?php echo siteorigin_widget_get_icon($icon_item['icon']); ?>
 
-            $child_output .= '<div class="lsow-icon-wrapper">';
+                    </div>
 
-            $child_output .= siteorigin_widget_get_icon($icon_item['icon']);
+                <?php else : ?>
 
-            $child_output .= '</div>';
+                    <a class="lsow-icon-wrapper" href="<?php echo $icon_url; ?>" <?php echo $target; ?>>
 
-        else :
+                        <?php echo siteorigin_widget_get_icon($icon_item['icon']); ?>
 
-            $child_output .= '<a class="lsow-icon-wrapper" href="' . $icon_url . '" ' . $target . '>';
+                    </a>
 
-            $child_output .= siteorigin_widget_get_icon($icon_item['icon']);
+                <?php endif; ?>
 
-            $child_output .= '</a>';
+            <?php endif; ?>
 
-        endif;
+        </div>
 
-    endif;
+        <?php
 
-    $child_output .= '</div><!-- .lsow-icon-list-item -->';
+    endforeach;
 
-    $output .= apply_filters('lsow_icon_list_item_output', $child_output, $icon_item, $settings);
+    ?>
 
-endforeach;
-
-$output .= '</div><!-- .lsow-icon-list -->';
-
-echo apply_filters('lsow_icon_list_output', $output, $settings);
+</div>

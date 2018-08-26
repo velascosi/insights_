@@ -139,13 +139,10 @@ class LSOW_Piechart_Widget extends SiteOrigin_Widget {
     }
 
     function get_template_variables($instance, $args) {
-        $settings = $instance['settings'];
-
-        $settings = array_merge($settings, array(
-            'piecharts' => !empty($instance['piecharts']) ? $instance['piecharts'] : array()
-        ));
-
-        return array('settings' => $settings);
+        return array(
+            'piecharts' => !empty($instance['piecharts']) ? $instance['piecharts'] : array(),
+            'settings' => $instance['settings']
+        );
     }
 
 }

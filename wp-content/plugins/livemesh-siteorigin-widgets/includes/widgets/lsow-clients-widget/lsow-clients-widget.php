@@ -119,14 +119,10 @@ class LSOW_Client_Widget extends SiteOrigin_Widget {
     }
 
     function get_template_variables($instance, $args) {
-
-        $settings = $instance['settings'];
-
-        $settings = array_merge($settings, array(
+        return array(
             'clients' => !empty($instance['clients']) ? $instance['clients'] : array(),
-        ));
-
-        return array('settings' => $settings);
+            'settings' => $instance['settings']
+        );
     }
 
 }
