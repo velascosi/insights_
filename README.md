@@ -1,7 +1,7 @@
-#Equipe
+# Equipe
   C 70 6D 65
   
-#Integrantes
+# Integrantes
 
   Carla Simões Gama
   Gustavo Barbato Floras
@@ -9,9 +9,9 @@
   Luan Rodrigues
   Silene Velasco
 
-# Plataforma Troca-í
+# **** Plataforma Troca-í ****
 
-Métodos realizados:
+# Métodos realizados:
   Identidade visual: https://bit.ly/2Pazgej
 
   Formulário para validação da ideia: https://bit.ly/2LrLjBp
