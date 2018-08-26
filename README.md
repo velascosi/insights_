@@ -22,3 +22,6 @@
   
   Tabela para definição do custo da plataforma: https://bit.ly/2MX3fJi
   
+  # Apresentação Elevator-Pitch
+    link: https://goo.gl/xHbYdt
+  
